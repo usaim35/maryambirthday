@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Maryam’s Magical Birthday Invitation</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  overflow:hidden;
+  font-family:'Comic Sans MS',cursive;
+  background:linear-gradient(to bottom right,#ffe6f0,#fff);
+  color:#d63384;
+  text-align:center;
+  height:100vh;
+  touch-action:manipulation;
+}
+
+/* Title */
+.glow-title{
+  font-size:clamp(1.8rem,6vw,2.8rem);
+  color:#ff66b2;
+  text-shadow:0 0 10px #ff99cc,0 0 25px #ff66b2,0 0 40px white;
+  margin-top:1rem;
+  animation:glowPulse 3s infinite ease-in-out;
+}
+@keyframes glowPulse{0%,100%{opacity:1}50%{opacity:.7}}
+
+#countdown{
+  font-size:1.1rem;
+  font-weight:bold;
+  color:#ff69b4;
+  margin-top:.4rem;
+  text-shadow:0 0 5px #ffb6c1;
+}
+
+/* Clouds */
+.cloud{
+  position:fixed;
+  background:rgba(255,255,255,.9);
+  border-radius:50%;
+  filter:blur(10px);
+  animation:floatClouds 60s linear infinite;
+  opacity:.6;
+  z-index:0;
+}
+@keyframes floatClouds{
+  0%{transform:translateX(-20vw)}
+  50%{transform:translateX(20vw)}
+  100%{transform:translateX(-20vw)}
+}
+
+/* Envelope */
+.envelope-container{
+  position:absolute;
+  top:55%;left:50%;
+  transform:translate(-50%,-50%);
+  z-index:5;
+}
+.message{
+  font-size:1.3rem;
+  margin-bottom:20px;
+  color:#ff69b4;
+  font-weight:bold;
+}
+.envelope{
+  width:220px;height:160px;
+  background:#ffcce5;
+  position:relative;
+  border:2px solid #ff8acb;
+  border-radius:8px;
+  box-shadow:0 0 20px rgba(255,182,193,.6);
+  cursor:pointer;
+}
+.envelope:before{
+  content:'';
+  position:absolute;top:0;left:0;
+  width:0;height:0;
+  border-left:110px solid transparent;
+  border-right:110px solid transparent;
+  border-bottom:80px solid #ffb6c1;
+  transition:transform 1s ease;
+  transform-origin:top;
+}
+.envelope.open:before{transform:rotateX(180deg)}
+
+button{
+  margin-top:20px;
+  background:#ff69b4;
+  border:none;
+  padding:10px 25px;
+  border-radius:25px;
+  font-size:1.1rem;
+  color:white;
+  cursor:pointer;
+  box-shadow:0 0 15px rgba(255,105,180,.5);
+  transition:all .3s ease;
+}
+button:hover{background:#ff85c1;transform:scale(1.05)}
+
+#replayBtn{
+  display:none;
+  background:linear-gradient(45deg,#ffb6c1,#ff66b2);
+  position:fixed;bottom:20px;left:50%;
+  transform:translateX(-50%);
+  z-index:20;
+}
+
+/* Balloons */
+.balloon{
+  position:absolute;
+  bottom:-200px;
+  width:80px;height:110px;
+  border-radius:50% 50% 45% 45%;
+  background:radial-gradient(circle at 30% 30%,#fff 0%,#ffb6c1 50%,#ff69b4 100%);
+  box-shadow:inset -8px -8px 15px rgba(255,255,255,.5),
+             0 0 10px rgba(255,182,193,.6);
+  overflow:hidden;
+  animation:rise 10s linear infinite;
+  z-index:2;
+}
+.balloon img{
+  width:70%;height:70%;
+  object-fit:cover;border-radius:50%;
+  border:3px solid white;
+  position:absolute;top:15%;left:15%;
+}
+.ribbon{
+  position:absolute;
+  bottom:-30px;left:50%;
+  width:2px;height:40px;
+  background:white;
+  transform:translateX(-50%);
+  border-radius:2px;
+}
+@keyframes rise{0%{transform:translateY(0)}100%{transform:translateY(-110vh)}}
+
+/* Hearts & sparkles */
+.heart{
+  position:fixed;width:18px;height:18px;
+  background:pink;transform:rotate(45deg);
+  opacity:.8;animation:fallHearts 8s linear forwards;z-index:1;
+}
+.heart::before,.heart::after{
+  content:"";position:absolute;width:18px;height:18px;
+  background:inherit;border-radius:50%;
+}
+.heart::before{top:-9px;left:0}
+.heart::after{left:-9px;top:0}
+@keyframes fallHearts{
+  0%{transform:translateY(0)rotate(45deg);opacity:1}
+  100%{transform:translateY(100vh)rotate(45deg);opacity:0}
+}
+.sparkle{
+  position:fixed;width:5px;height:5px;
+  border-radius:50%;
+  animation:sparkle 2s infinite ease-in-out;
+  z-index:1;
+}
+@keyframes sparkle{
+  0%,100%{transform:scale(1);opacity:1}
+  50%{transform:scale(2);opacity:.5}
+}
+
+/* Invitation */
+.invitation{
+  position:fixed;top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  background:#fff0f5;
+  padding:10px;
+  border-radius:20px;
+  box-shadow:0 0 30px rgba(255,182,193,.8);
+  transition:all .6s ease;
+  z-index:10;
+  width:85vw;max-width:350px;
+}
+.invitation.show{transform:translate(-50%,-50%) scale(1)}
+.invitation img{width:100%;border-radius:15px}
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" autoplay loop>
+  <source src="bdh.mp3.mp3" type="audio/mp3" />
+</audio>
+
+<div class="glow-title">🎀 Happy Birthday Maryam 🎀</div>
+<div id="countdown"></div>
+
+<div class="envelope-container">
+  <div class="message">Opens Maryam's Birthday Invitation</div>
+  <div class="envelope" id="envelope"></div>
+  <button id="openBtn">Open</button>
+</div>
+
+<div class="invitation" id="invitation">
+  <img src="Gemini.jpg.png" alt="Maryam Invitation" />
+</div>
+
+<button id="replayBtn">🎀 Replay Magic 🎀</button>
+
+<script>
+const envelope=document.getElementById("envelope");
+const openBtn=document.getElementById("openBtn");
+const invitation=document.getElementById("invitation");
+const replayBtn=document.getElementById("replayBtn");
+const countdownEl=document.getElementById("countdown");
+
+// Clouds
+for(let i=0;i<10;i++){
+  const c=document.createElement("div");
+  c.classList.add("cloud");
+  c.style.width=100+Math.random()*150+"px";
+  c.style.height=c.style.width;
+  c.style.left=Math.random()*100+"vw";
+  c.style.top=Math.random()*80+"vh";
+  c.style.background=Math.random()>0.5?"#fff":"#ffe6f0";
+  c.style.animationDuration=60+Math.random()*40+"s";
+  document.body.appendChild(c);
+}
+
+// Music unlock
+window.addEventListener("click",()=>{
+  const music=document.getElementById("bgMusic");
+  music.muted=false;music.play();
+},{once:true});
+
+// Countdown
+const birthday=new Date("2025-10-16T00:00:00").getTime();
+const timer=setInterval(()=>{
+  const now=new Date().getTime();
+  const distance=birthday-now;
+  if(distance<0){
+    clearInterval(timer);
+    countdownEl.innerHTML="🎉 It's Maryam's Birthday! 🎉";
+    openEnvelope();
+    return;
+  }
+  const d=Math.floor(distance/(1000*60*60*24));
+  const h=Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+  const m=Math.floor((distance%(1000*60*60))/(1000*60));
+  const s=Math.floor((distance%(1000*60))/1000);
+  countdownEl.innerHTML=`Countdown: ${d}d ${h}h ${m}m ${s}s`;
+},1000);
+
+// ✅ Fixed download trigger
+function openEnvelope(){
+  envelope.classList.add("open");
+
+  // trigger file download immediately (works on mobile)
+  const link=document.createElement("a");
+  link.href="gemini.jpg.png";
+  link.download="Maryam_Invitation.jpg";
+  link.style.display="none";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  // then show invite
+  setTimeout(()=>{
+    invitation.classList.add("show");
+    replayBtn.style.display="block";
+    launchConfetti();
+  },1500);
+}
+openBtn.addEventListener("click",openEnvelope);
+replayBtn.addEventListener("click",()=>{
+  envelope.classList.remove("open");
+  invitation.classList.remove("show");
+  replayBtn.style.display="none";
+});
+
+// Hearts
+setInterval(()=>{
+  const heart=document.createElement("div");
+  heart.classList.add("heart");
+  heart.style.left=Math.random()*window.innerWidth+"px";
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),8000);
+},700);
+
+// Sparkles
+setInterval(()=>{
+  const s=document.createElement("div");
+  s.classList.add("sparkle");
+  s.style.left=Math.random()*window.innerWidth+"px";
+  s.style.top=Math.random()*window.innerHeight+"px";
+  s.style.background=Math.random()>0.5?"pink":"white";
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),2000);
+},250);
+
+// Balloons
+const balloonImages=["1.jpg","2.jpg","3.jpg","4.jpg","5.jpg"];
+function createBalloon(){
+  const b=document.createElement("div");
+  b.classList.add("balloon");
+  b.style.left=Math.random()*100+"vw";
+  b.style.animationDuration=9+Math.random()*4+"s";
+  const img=document.createElement("img");
+  img.src=balloonImages[Math.floor(Math.random()*balloonImages.length)];
+  const ribbon=document.createElement("div");
+  ribbon.classList.add("ribbon");
+  b.appendChild(img);
+  b.appendChild(ribbon);
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(),12000);
+}
+setInterval(createBalloon,900);
+
+// Confetti
+function launchConfetti(){
+  for(let i=0;i<100;i++){
+    const conf=document.createElement("div");
+    conf.style.position="fixed";
+    conf.style.left=Math.random()*100+"vw";
+    conf.style.top="-10px";
+    conf.style.width="6px";
+    conf.style.height="12px";
+    conf.style.background=Math.random()>0.5?"#ff69b4":"#fff";
+    conf.style.opacity="0.9";
+    conf.style.borderRadius="2px";
+    conf.style.transform=`rotate(${Math.random()*360}deg)`;
+    conf.style.animation=`fall ${4+Math.random()*3}s linear forwards`;
+    document.body.appendChild(conf);
+    setTimeout(()=>conf.remove(),7000);
+  }
+}
+const style=document.createElement("style");
+style.textContent=`@keyframes fall{to{transform:translateY(100vh)rotate(720deg);opacity:0;}}`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
