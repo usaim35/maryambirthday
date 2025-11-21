@@ -1,75 +1,81 @@
-const btn = document.getElementById("openBtn");
-const scare = document.getElementById("scareScreen");
-const final = document.getElementById("finalScreen");
-const scareSound = document.getElementById("scareSound");
-const weird = document.getElementById("weirdSound");
+// sequence: when envelope clicked -> open flap -> show 4-5 pop items one-by-one -> final screen
+const envelope = document.getElementById('envelope');
+const popContainer = document.getElementById('popContainer');
+const finalScreen = document.getElementById('finalScreen');
+const restartBtn = document.getElementById('restartBtn');
+const popSound = document.getElementById('popSound');
+const finalSound = document.getElementById('finalSound');
 
-btn.addEventListener("click", () => {
-  // Hide romantic text
-  document.getElementById("romanticBox").style.display = "none";
+let hasOpened = false;
 
-  // Show jumpscare
-  scare.classList.remove("hidden");
-  scareSound.play();
-  scareSound.volume = 1;
+// number of items to pop
+const TOTAL_ITEMS = 5;
+// message to show each time
+const MESSAGE = "ISSE OPEN KARO PAKKA ISME HAI";
 
-  // After 2 seconds → show final insult screen
-  setTimeout(() => {
-    scare.classList.add("hidden");
-    final.classList.remove("hidden");
-    weird.play();
-    startFireworks();
-  }, 2000);
+// click to open envelope and start sequence
+envelope.addEventListener('click', () => {
+  if (hasOpened) return; // prevent re-trigger until restart
+  hasOpened = true;
+
+  // animate flap open
+  envelope.classList.add('open');
+
+  // small delay so flap looks open before popping items
+  setTimeout(() => startPops(TOTAL_ITEMS), 600);
 });
 
-/* Fireworks code */
-function startFireworks() {
-  const canvas = document.getElementById("fireworks");
-  const ctx = canvas.getContext("2d");
-
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  const fireworks = [];
-
-  function random(n) { return Math.random() * n; }
-
-  function createFirework() {
-    let x = random(canvas.width);
-    let y = random(canvas.height / 2);
-    let particles = [];
-
-    for (let i = 0; i < 40; i++) {
-      particles.push({
-        x, y,
-        dx: (Math.random() - 0.5) * 6,
-        dy: (Math.random() - 0.5) * 6,
-        life: 100
-      });
+function startPops(n){
+  let i = 0;
+  function nextPop(){
+    if (i >= n){
+      // after all items, show final
+      setTimeout(showFinal, 700);
+      return;
     }
-    fireworks.push(particles);
+    spawnPop(MESSAGE + (n>1 ? ` (${i+1})` : ''));
+    i++;
+    // spacing between pops
+    setTimeout(nextPop, 900);
   }
-
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    fireworks.forEach((fw, i) => {
-      fw.forEach(p => {
-        p.x += p.dx;
-        p.y += p.dy;
-        p.life--;
-
-        ctx.fillStyle = "rgb(255,0,0)";
-        ctx.fillRect(p.x, p.y, 3, 3);
-      });
-      if (fw[0].life <= 0) fireworks.splice(i, 1);
-    });
-
-    if (Math.random() < 0.1) createFirework();
-
-    requestAnimationFrame(animate);
-  }
-
-  animate();
+  nextPop();
 }
+
+function spawnPop(text){
+  // optional sound
+  try { popSound.currentTime = 0; popSound.play().catch(()=>{}); } catch(e){}
+
+  const d = document.createElement('div');
+  d.className = 'pop-item';
+  d.innerText = text;
+  popContainer.appendChild(d);
+
+  // force reflow and start animation
+  requestAnimationFrame(()=> d.classList.add('pop-animate'));
+
+  // after a short time, fade out
+  setTimeout(()=> {
+    d.classList.add('pop-fade');
+    // remove after animation
+    setTimeout(()=> d.remove(), 900);
+  }, 1200);
+}
+
+function showFinal(){
+  // play final sound
+  try { finalSound.currentTime = 0; finalSound.play().catch(()=>{}); } catch(e){}
+
+  // hide envelope area visually
+  document.querySelector('.page').style.visibility = 'hidden';
+  finalScreen.classList.remove('hidden');
+}
+
+// restart
+restartBtn.addEventListener('click', () => {
+  // reset
+  hasOpened = false;
+  document.querySelector('.page').style.visibility = 'visible';
+  envelope.classList.remove('open');
+  finalScreen.classList.add('hidden');
+});
 
