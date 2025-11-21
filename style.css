@@ -1,85 +1,84 @@
 body {
-  background: linear-gradient(to bottom right, #ffe6f0, #fff);
-  font-family: 'Poppins', sans-serif;
-  overflow-x: hidden;
-  position: relative;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #ffb6c1, #ffdde1);
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+  height: 100vh;
+  overflow: hidden;
 }
-.text-pink { color: #ff69b4; }
-.btn-pink {
-  background-color: #ff69b4;
-  color: white;
-  border: none;
-}
-.btn-pink:hover {
-  background-color: #ff85c1;
-}
-.card {
-  background-color: white;
-  border-radius: 20px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-.countdown {
-  font-size: 1.5em;
+
+.main-text {
+  margin-top: 80px;
+  font-size: 28px;
+  padding: 20px;
+  color: #b30042;
   font-weight: bold;
-  color: #d63384;
+  animation: fadeIn 1.5s ease;
 }
 
-/* 🎈 Balloons */
-.balloon {
-  position: fixed;
-  bottom: -100px;
-  width: 40px;
-  height: 55px;
-  border-radius: 50%;
-  animation: rise linear forwards;
-  z-index: 1;
-  opacity: 0.9;
-}
-@keyframes rise {
-  0% { transform: translateY(0) scale(1); opacity: 0.9; }
-  100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+.surprise {
+  display: block;
+  margin-top: 20px;
+  font-size: 20px;
+  color: #6a0030;
 }
 
-/* 🎊 Confetti */
-.confetto {
-  position: fixed;
-  top: 0;
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
-  animation: fall linear forwards;
-  z-index: 2;
-}
-@keyframes fall {
-  0% { transform: translateY(0) rotate(0deg); }
-  100% { transform: translateY(100vh) rotate(720deg); }
+.btn {
+  padding: 12px 25px;
+  font-size: 20px;
+  background: #ff0055;
+  color: #fff;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: 0.3s;
+  font-weight: bold;
 }
 
-/* 💖 Popup */
-.popup {
+.btn:hover {
+  transform: scale(1.1);
+  background: #ff003c;
+}
+
+/* Surprise Screen */
+.surprise-screen {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 192, 203, 0.7);
+  background: black;
+  color: red;
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 10;
+  align-items: center;
+  flex-direction: column;
+  font-size: 60px;
+  font-weight: bold;
+  transition: 0.4s;
 }
-.popup.hidden {
+
+.surprise-text {
+  animation: shake 0.3s infinite;
+}
+
+/* Hidden Class */
+.hidden {
   display: none;
 }
-.popup-content {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
-  animation: popupScale 0.5s ease;
+
+/* Animations */
+@keyframes shake {
+  0% { transform: translate(0,0); }
+  25% { transform: translate(-10px,5px); }
+  50% { transform: translate(10px,-5px); }
+  75% { transform: translate(-5px,10px); }
+  100% { transform: translate(5px,-10px); }
 }
-@keyframes popupScale {
-  0% { transform: scale(0.5); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
