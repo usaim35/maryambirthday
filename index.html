@@ -3,27 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>For My Janaa ❤️</title>
+  <title>For My Love ❤️</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="main-text" id="mainBox">
-  Janaa meri jaan... ❤️<br><br>
-  Main aesa kar sakta hun? Nahi na?  
-  Aap to meri jaaan ho, meri zindagi ho, meri heartbeat ho... 💘<br><br>
+<div class="main" id="romanticBox">
+  Janaa meri Jaan… ❤️<br><br>
+  Main aisa kar sakta hun? Nahi na?  
+  Aap meri zindagi ho, meri saansein ho… 💘<br><br>
 
-  <span class="surprise">Yeh kholen… iske andar aapke liye SURPRISE hai 😍👇</span><br><br>
+  <span class="sub">Yeh kholen… andar Surprise hai 😍👇</span>
 
   <button id="openBtn" class="btn">OPEN SURPRISE</button>
 </div>
 
-<div id="surpriseScreen" class="hidden surprise-screen">
-  <div class="surprise-text">
-    CHAL HATT!! ZEHNI MAREEZ 🤣<br>
-    PAGAL NAFSIATI HAHAHAHAH 🤣🤡
-  </div>
+<!-- Jumpscare -->
+<div id="scareScreen" class="hidden scare-screen">
+  <img src="https://i.imgur.com/8kqI9mL.png" class="scare-img" />
 </div>
+
+<!-- Final insult screen -->
+<div id="finalScreen" class="hidden final-screen">
+  <div class="final-text">
+    CHAL HATT!! ZEHNI MAREEZ 🤣<br>
+    PAGAL NAFSIATI HAHAHAHAH 🤣🔥🤡
+  </div>
+  <canvas id="fireworks"></canvas>
+</div>
+
+<audio id="scareSound">
+  <source src="https://files.catbox.moe/0zd6re.mp3" type="audio/mpeg">
+</audio>
 
 <audio id="weirdSound">
   <source src="https://files.catbox.moe/6tq5e4.mp3" type="audio/mpeg">
@@ -32,3 +43,4 @@
 <script src="script.js"></script>
 </body>
 </html>
+
